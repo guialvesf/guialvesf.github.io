@@ -4,7 +4,7 @@ author: guialvesf
 date: 2022-03-24 01:00:00 -0300
 categories: [tryhackme, writeup]
 tags: [tryhackme, writeup]
-image: https://raw.githubusercontent.com/guialvesf/guialvesf.github.io/main/img/thm/ohmywebserver/ohmywebserver.png
+image: "/img/thm/ohmywebserver/banner.png"
 alt: "tryhackme"
 ---
 
