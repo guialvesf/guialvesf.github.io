@@ -13,7 +13,7 @@ alt: "tryhackme"
 </p>
 <hr>
 
-## Recon
+# Recon
 
 Let's start with a Nmap scan
 
@@ -53,6 +53,8 @@ Ok, we found three services running on this machine. Apache, Nginx and SSH, so l
 
 ![webapp](/img/thm/mustacchio/webpage.png)
 
+# User
+
 Analyzing the page I didn't find anything, so I checked the page's source code, and discovered a interesting thing: there's a script being called 
 from `custom` directory
 
@@ -72,3 +74,7 @@ Ok, we have two new informations: `admin` user and its hash password. We can now
 Cool, now we can try to use these account credentials on service running on 8765 port.
 
 ![adminpanel](/img/thm/mustacchio/adminpanel.png)
+
+Acessing the page, we can add comments wich are XML entries. So we can test it and then try XXE payload.
+
+![xmltest](/img/thm/mustacchio/xmlteste.png)
