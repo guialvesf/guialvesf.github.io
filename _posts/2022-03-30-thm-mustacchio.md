@@ -68,3 +68,7 @@ Ok, we have two new informations: `admin` user and its hash password. We can now
 
 * User: admin
 * Pass: bulldog19
+
+Cool, now we can try to use these account credentials on service running on 8765 port.
+
+![adminpanel](/img/thm/mustacchio/adminpanel.png)
