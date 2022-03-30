@@ -57,3 +57,14 @@ Analyzing the page I didn't find anything, so I checked the page's source code, 
 from `custom` directory
 
 ![sourcecode](/img/thm/mustacchio/viewsource.png)
+
+So acessing this directory and then the js subdirectory I found a `users.bak` file. So by downloading we'll can analyze it better.
+
+![adminhash](/img/thm/mustacchio/adminhash.png)
+
+Ok, we have two new informations: `admin` user and its hash password. We can now use [crackstation](https://crackstation.net/) to crack it.
+
+![crackstation](/img/thm/mustacchio/crackstation.png)
+
+* User: admin
+* Pass: bulldog19
