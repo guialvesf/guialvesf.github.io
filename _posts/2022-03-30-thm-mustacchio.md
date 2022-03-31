@@ -106,3 +106,17 @@ Now we need to crack another password, but this time I'll use the famous John Th
 Nice, another password cracked, so now we can access.
 
 ![ssh](/img/thm/mustacchio/ssh.png)
+
+Now let's just read user flag
+
+![user](/img/thm/mustacchio/user.png)
+
+# Root
+
+For this privilege escalation, I noticed it has two users and two home directories
+
+![home](/img/thm/mustacchio/joe.png)
+
+And Joe's home directory has a file, and analyzing it with `file` and `strings` I found something a little interesting: tail is being invoked.
+
+![log_file](/img/thm/mustacchio/strings.png)
