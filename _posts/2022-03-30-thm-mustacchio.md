@@ -75,6 +75,12 @@ Cool, now we can try to use these account credentials on service running on 8765
 
 ![adminpanel](/img/thm/mustacchio/adminpanel.png)
 
-Acessing the page, we can add comments wich are XML entries. So we can test it and then try XXE payload.
+Acessing the page, we can add comments.
 
 ![xmltest](/img/thm/mustacchio/xmlteste.png)
+
+Viewing the source code again, can we download a new file
+
+![sourcecode2](/img/thm/mustacchio/viewsource2.png)
+
+Trying a basic XXE payload, we can access the `/etc/passwd` file.
