@@ -8,9 +8,7 @@ image: "/img/thm/ohmywebserver/banner.png"
 alt: "tryhackme"
 ---
 
-
-<p align="center" width="100%">
-    <img src="/img/thm/ohmywebserver/banner.png"> 
+![banner](/img/thm/ohmywebserver/banner.png) 
 </p>
 <hr>
 
