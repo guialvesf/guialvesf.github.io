@@ -8,9 +8,7 @@ image: "/img/thm/mustacchio/banner.png"
 alt: "tryhackme"
 ---
 
-<p align="center" width="100%">
-    <img src="/img/thm/mustacchio/banner.png"> 
-</p>
+![banner](/img/thm/mustacchio/banner.png) 
 <hr>
 
 # Recon
@@ -120,3 +118,11 @@ For this privilege escalation, I noticed it has two users and two home directori
 And Joe's home directory has a file, and analyzing it with `file` and `strings` I found something a little interesting: tail is being invoked.
 
 ![log_file](/img/thm/mustacchio/strings.png)
+
+Nice, to exploit it I'll just need to change my PATH variable and add a file called tail to be called and execute some command (bash?).
+
+![tail](/img/thm/mustacchio/tail.png)
+
+Ok, the tail is the new bash. So let's execute it and get root shell and flag.
+
+![root](/img/thm/mustacchio/root.png)
