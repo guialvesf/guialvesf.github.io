@@ -90,3 +90,8 @@ So now can we test it.
 Trying a basic XXE payload, we can access the `/etc/passwd` file.
 
 ![passwd](/img/thm/mustacchio/passwd.png)
+
+Ok, now we'll need to steal Barry's ssh private key. For this we'll use that file inclusion to read the file, and then use it to access the machine. I used the source code to copy, because of the formatting.
+
+![id_rsa](/img/thm/mustacchio/id_rsa.png)
+
