@@ -8,9 +8,7 @@ image: "/img/thm/gallery/Capa.png"
 alt: "tryhackme"
 ---
 
-
-<p align="center" width="100%">
-    <img src="/img/thm/gallery/Capa.png"> 
+![banner](/img/thm/gallery/Capa.png)
 </p>
 <hr>
 
