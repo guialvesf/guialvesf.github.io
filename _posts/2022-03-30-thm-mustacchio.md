@@ -75,12 +75,18 @@ Cool, now we can try to use these account credentials on service running on 8765
 
 ![adminpanel](/img/thm/mustacchio/adminpanel.png)
 
-Acessing the page, we can add comments.
-
-![xmltest](/img/thm/mustacchio/xmlteste.png)
-
-Viewing the source code again, can we download a new file
+Accessing and viewing the source code again, can we see that a SSH private key may be our attack point, and we can too download a new file.
 
 ![sourcecode2](/img/thm/mustacchio/viewsource2.png)
 
+Analyzing this file, can I see that the admin panel its something about XML, so can we try a XXE. 
+
+![dontforget](/img/thm/mustacchio/dontforget.png)
+
+So now can we test it.
+
+![xmltest](/img/thm/mustacchio/xmlteste.png)
+
 Trying a basic XXE payload, we can access the `/etc/passwd` file.
+
+![passwd](/img/thm/mustacchio/passwd.png)
