@@ -95,3 +95,14 @@ Ok, now we'll need to steal Barry's ssh private key. For this we'll use that fil
 
 ![id_rsa](/img/thm/mustacchio/id_rsa.png)
 
+NICE, now can we use this ssh private key to guarantee access? No :(
+
+![ssh_req](/img/thm/mustacchio/id_rsa_pass_req.png)
+
+Now we need to crack another password, but this time I'll use the famous John The Ripper to do it.
+
+![john](/img/thm/mustacchio/johntheripper.png)
+
+Nice, another password cracked, so now we can access.
+
+![ssh](/img/thm/mustacchio/ssh.png)
