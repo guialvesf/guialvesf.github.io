@@ -9,7 +9,6 @@ alt: "tryhackme"
 ---
 
 ![banner](/img/thm/gallery/Capa.png)
-</p>
 <hr>
 
 Primeiramente, vamos usar o Nmap para encontrar portas e serviços abertos no sistema.

@@ -9,7 +9,6 @@ alt: "tryhackme"
 ---
 
 ![banner](/img/thm/ohmywebserver/banner.png) 
-</p>
 <hr>
 
 # Recon
